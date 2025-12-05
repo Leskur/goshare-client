@@ -1,50 +1,53 @@
-import { useState } from "react";
-import reactLogo from "./assets/react.svg";
 import { invoke } from "@tauri-apps/api/core";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input.tsx";
+import { ArrowRightToLine } from "lucide-react";
+
 import "./App.css";
+import { useEffect, useState } from "react";
 
 function App() {
-  const [greetMsg, setGreetMsg] = useState("");
-  const [name, setName] = useState("");
-
-  async function greet() {
-    // Learn more about Tauri commands at https://tauri.app/develop/calling-rust/
-    setGreetMsg(await invoke("greet", { name }));
+  const [roomId, setRoomId] = useState("");
+  useEffect(() => {}, []);
+  async function join() {
+    alert(roomId);
+    await invoke("join", { roomId });
   }
-
   return (
-    <main className="container">
-      <h1>Welcome to Tauri + React</h1>
-
-      <div className="row">
-        <a href="https://vitejs.dev" target="_blank">
-          <img src="/vite.svg" className="logo vite" alt="Vite logo" />
-        </a>
-        <a href="https://tauri.app" target="_blank">
-          <img src="/tauri.svg" className="logo tauri" alt="Tauri logo" />
-        </a>
-        <a href="https://reactjs.org" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <p>Click on the Tauri, Vite, and React logos to learn more.</p>
-
-      <form
-        className="row"
-        onSubmit={(e) => {
-          e.preventDefault();
-          greet();
-        }}
-      >
-        <input
-          id="greet-input"
-          onChange={(e) => setName(e.currentTarget.value)}
-          placeholder="Enter a name..."
-        />
-        <button type="submit">Greet</button>
-      </form>
-      <p>{greetMsg}</p>
-    </main>
+    <div className="min-h-[100svh] overflow-hidden">
+      <header className="w-full max-w-4xl mt-8  text-center">
+        <h1 className="text-4xl font-bold text-indigo-800 flex items-center justify-center gap-3">
+          <i className="fas fa-folder-open"></i>
+          GoShare
+        </h1>
+      </header>
+      <main className="flex-1 p-4 mt-4 items-center">
+        <div className="flex flex-col gap-5">
+          <Input
+            className="py-6"
+            placeholder="请输入房间号"
+            onChange={(e) => {
+              setRoomId(e.currentTarget.value);
+            }}
+          />
+          <Button className="w-full py-6 text-lg" onClick={join}>
+            <ArrowRightToLine />
+            加入房间
+          </Button>
+          <div className="pt-4 border-t border-gray-200">
+            <h3 className="text-sm font-medium text-gray-700 mb-2">
+              如何获取房间号？
+            </h3>
+            <p className="text-sm text-gray-600">
+              联系房间创建者获取 6 位数字房间号，或创建新房间开始共享文件。
+            </p>
+          </div>
+        </div>
+      </main>
+      <footer className="text-center text-gray-500 text-sm">
+        <p>@GoShare 基于 P2P 分享文件</p>
+      </footer>
+    </div>
   );
 }
 
